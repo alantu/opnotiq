@@ -10,13 +10,17 @@ Usage
 -----
 
 ```javascript
+  var queues = require('queues');
+
   var options = {
     token: 'xxxxxxxx'
     project_id: 'xxxxxxxx'
   }
 
+  // init queue provider
   var provider = queues.iron(options);
 
+  // init optoniq
   var opnotiq = require('opnotiq')(provider);
 
   opnotiq.on('notification', function(msg) {
