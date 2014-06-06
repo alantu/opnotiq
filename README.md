@@ -11,21 +11,30 @@ Usage
 
 ```javascript
   var options = {
-    ironMQ: {
-      token: 'xxxxxxxx'
-      project_id: 'xxxxxxxx'
-    }
+    token: 'xxxxxxxx'
+    project_id: 'xxxxxxxx'
   }
 
-  var queues = require('queues')(config);
+  var provider = queues.iron(options);
 
-  yield queues.postOperation('update-task', {
-    // op specific data
+  var opnotiq = require('opnotiq')(provider);
+
+  opnotiq.on('notification', function(msg) {
+    // handle notification
   });
 
 
-  yield queues.postNotification('attach-project', 9349, {
+  opnotiq.postOperation('update-task', {
+    // op specific data
+  }, function(){
+    // callback
+  });
+
+
+  opnotiq.postNotification('attach-project', 9349, {
     // notification specific data
+  }, function(){
+    // callback
   });
 ```
 
