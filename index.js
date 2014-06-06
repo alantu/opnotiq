@@ -3,93 +3,110 @@
  * Module dependencies
  */
 
-var ironMQ = require('iron_mq');
 var extend = require('extend');
 
 
 /**
- * Expose `queues()` as the module.
+ * Expose `opnotiq()` as the module.
  */
 
-module.exports = queues
+module.exports = opnotiq
 
 
 /**
- * Create a queue helper with the given `options`
+ * Create an operation/notification messages helper
  *
  * Options:
  *    - `notifQueueName` name of your notifications queue. Default 'notifications'
  *    - `opQueueName` name of your operations queue. Default 'operations'
- *    _ `ironMQ`  IronMQ connection params
- *       - `token` IronMQ account token
- *       - `project_id` IronMQ project id
  *
+ * @param {queues.Provider} provider - The queues provider
  * @param {Object} options
  * @return {Type}
  * @api public
  */
 
 
-function queues(options) {
-  var ironConfig = options.ironMQ;
+function opnotiq(provider, options) {
+  options = options || {};
   var notifQueueName = options.notifQueueName || 'notifications';
   var opQueueName = options.opQueueName || 'operations';
 
-  var imq = new ironMQ.Client(ironConfig);
-  var notifQueue = imq.queue(notifQueueName);
-  var opQueue = imq.queue(opQueueName);
+  var notifQueue, opQueue;
+
+  // for lazy queues
+
+  function create(type) {
+    if (/^operation/i.test(type)) {
+      opQueue = opQueue || provider.get(opQueueName);
+    } else if (/^notification/i.test(type)) {
+      notifQueue = notifQueue || provider.get(notifQueueName);
+    }
+  }
 
   return {
 
     /**
-     * Returns a new client instance for `notifications` queue
+     * Set a handler for incoming operation/notification messages
+     *
+     * @param {String} type - The type of message to handle (operation | notification)
+     * @param {Functiona} callback
+     *
      */
 
-    getNotificationsQueue: function() {
-      return new ironMQ.Client(extend(ironConfig, { queue_name: notifQueueName }));
+    on: function(type, callback) {
+      create(type);
+
+      if (/^operation/i.test(type)) {
+        opQueue.on('message', callback);
+        opQueue.connect();
+      } else if (/^notification/i.test(type)) {
+        notifQueue.on('message', callback);
+        notifQueue.connect();
+      }
     },
 
-    /**
-     * Returns a new client instance for `notifications` queue
-     */
-
-    getOperationsQueue: function() {
-      return new ironMQ.Client(extend(ironConfig, { queue_name: opQueueName }));
-    },
 
     /**
      * Post a message in notification queue
      *
      * @param {String} name The notification name
      * @param {Array|String} recipients
-     * @param {Object} options
+     * @param {Object} data
+     * @param {Function} callback
+     *
      */
 
-    postNotification: function(name, recipients, options) {
+    postNotification: function(name, recipients, data, callback) {
+      create('notifications');
+
       var msg = {
         name: name,
         recipients: recipients,
-        data: options
+        data: data
       };
 
-      return thunkify(notifQueue.post)(JSON.stringify(msg));
+      notifQueue.post(msg, callback);
     },
 
+
     /**
-     * Post a message in notification queue
+     * Post a message in operation queue
      *
      * @param {String} name The operation name
-     * @param {Object} options
+     * @param {Object} data
+     * @param {Function} callback
      */
 
-    postOperation: function(name, options) {
+    postOperation: function(name, data, callback) {
+      create('operations');
+
       var msg = {
         name: name,
-        data: options
+        data: data
       };
 
-      //return thunkify(opQueue.post)(JSON.stringify(msg));
-      opQueue.post(JSON.stringify(msg));
+      opQueue.post(msg, callback);
     }
   };
 }

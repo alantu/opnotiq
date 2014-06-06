@@ -18,7 +18,8 @@
     "operations",
     "notifications",
     "queues",
-    "decoupling"
+    "decoupling",
+    "co"
   ],
   "author": "Alantu",
   "license": "MIT",
@@ -27,12 +28,14 @@
   },
   "homepage": "https://github.com/alantu/opnotiq",
   "dependencies": {
-    "iron_mq": "~0.2.3",
     "extend": "~1.2.1",
-    "thunkify": "^2.1.2"
+    "queues": "git+ssh://git@github.com:alantu/queues.git#master"
   },
   "devDependencies": {
     "mocha": "~1.20.1",
-    "should": "~4.0.1"
+    "should": "~4.0.1",
+    "event-emitter": "~0.3.1",
+    "sinon": "~1.10.2",
+    "assert": "~1.1.1"
   }
 }

@@ -5,7 +5,6 @@ opnotiq
 
 **opnotiq** is a component to handle actions against operations and notifications queues, a simple pattern we use for decoupling work load from API requests, for accepting operations via non-api calls (i.e through a GCM upstream message) and notify when it's done.
 
-By now, support only iron.io queues.
 
 Usage
 -----
