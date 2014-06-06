@@ -1,0 +1,38 @@
+{
+  "name": "opnotiq",
+  "version": "0.0.1",
+  "description": "Handle actions against operations and notifications queues",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/alantu/opnotiq.git"
+  },
+  "keywords": [
+    "opnoti",
+    "operations",
+    "notifications",
+    "queues",
+    "decoupling"
+  ],
+  "author": "Alantu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alantu/opnotiq/issues"
+  },
+  "homepage": "https://github.com/alantu/opnotiq",
+  "dependencies": {
+    "iron_mq": "~0.2.3",
+    "extend": "~1.2.1",
+    "thunkify": "^2.1.2"
+  },
+  "devDependencies": {
+    "mocha": "~1.20.1",
+    "should": "~4.0.1"
+  }
+}
