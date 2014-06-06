@@ -29,13 +29,12 @@
   "homepage": "https://github.com/alantu/opnotiq",
   "dependencies": {
     "extend": "~1.2.1",
-    "queues": "git+ssh://git@github.com:alantu/queues.git#master"
+    "queues": "~0.0.1"
   },
   "devDependencies": {
     "mocha": "~1.20.1",
     "should": "~4.0.1",
     "event-emitter": "~0.3.1",
-    "sinon": "~1.10.2",
-    "assert": "~1.1.1"
+    "sinon": "~1.10.2"
   }
 }
