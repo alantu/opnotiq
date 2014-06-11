@@ -52,8 +52,8 @@ function opnotiq(provider, options) {
         queue.remove(msg.id);
       };
 
-      var data = JSON.parse(msg.data);
-      callback(data, done);
+      var body = JSON.parse(msg.body || '{}');
+      callback(body, done);
     }
   }
 
