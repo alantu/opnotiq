@@ -13,6 +13,9 @@ describe('opnotiq', function() {
         },
         post: function(msg, callback) {
           callback();
+        },
+        remove: function(msgId, callback){
+          callback();
         }
       };
 
@@ -73,7 +76,7 @@ describe('opnotiq', function() {
 
   it('should handle operation', function(done) {
     var mockCallback = sandbox.spy();
-    var mockData = { foo: 'bar' };
+    var mockData = { id: 'mock', data: '{ "foo": "bar" }'};
 
     opnotiq.on('operation', mockCallback);
 
@@ -85,7 +88,7 @@ describe('opnotiq', function() {
 
   it('should handle notification', function(done) {
     var mockCallback = sandbox.spy();
-    var mockData = { foo: 'bar' };
+    var mockData = { id: 'mock', data: '{ "foo": "bar" }'};
 
     opnotiq.on('notification', mockCallback);
 

@@ -44,6 +44,19 @@ function opnotiq(provider, options) {
     }
   }
 
+  // to extract data from msg and enabling easy removal
+
+  function receive(queue, callback) {
+    return function(msg) {
+      function done() {
+        queue.remove(msg.id);
+      };
+
+      var data = JSON.parse(msg.data);
+      callback(data, done);
+    }
+  }
+
   return {
 
     /**
@@ -58,10 +71,10 @@ function opnotiq(provider, options) {
       create(type);
 
       if (/^operation/i.test(type)) {
-        opQueue.on('message', callback);
+        opQueue.on('message', receive(opQueue, callback));
         opQueue.connect();
       } else if (/^notification/i.test(type)) {
-        notifQueue.on('message', callback);
+        notifQueue.on('message', receive(notifQueue, callback));
         notifQueue.connect();
       }
     },
