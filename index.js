@@ -49,7 +49,7 @@ function opnotiq(provider, options) {
   function receive(queue, callback) {
     return function(msg) {
       function done() {
-        queue.remove(msg.id);
+        queue.remove(msg);
       };
 
       var body = JSON.parse(msg.body || '{}');
