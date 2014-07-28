@@ -71,7 +71,7 @@ function opnotiq(provider, options) {
         queue.remove(msg);
       }
 
-      //var body = JSON.parse(msg.body || '{}');
+      var body = JSON.parse(msg.Body || '{}');
       callback(msg, done);
     };
   }
