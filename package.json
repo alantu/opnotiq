@@ -1,6 +1,6 @@
 {
   "name": "opnotiq",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Handle actions against operations and notifications queues",
   "main": "index.js",
   "directories": {
@@ -29,7 +29,7 @@
   "homepage": "https://github.com/alantu/opnotiq",
   "dependencies": {
     "extend": "~1.2.1",
-    "queues": "~0.1.0",
+    "queues": "~0.2.0",
     "debug": "^1.0.4"
   },
   "devDependencies": {

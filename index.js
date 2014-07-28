@@ -90,8 +90,15 @@ function opnotiq(provider, options) {
       create(type, function() {
         if (/^operation/i.test(type)) {
           opQueue.on('message', receive(opQueue, callback));
+
+          if (!opQueue.isStarted()) {
+            opQueue.start();
+          }
         } else if (/^notification/i.test(type)) {
           notifQueue.on('message', receive(notifQueue, callback));
+          if (!notifQueue.isStarted()) {
+            notifQueue.start();
+          }
         }
       });
     },
