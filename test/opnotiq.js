@@ -10,6 +10,7 @@ describe('opnotiq', function() {
       sandbox = require('sinon').sandbox.create();
       fakeQueue = {
         connect: function(options) {
+          this.emit('connected');
         },
         post: function(msg, callback) {
           callback();
@@ -45,7 +46,7 @@ describe('opnotiq', function() {
     var expectedMsg = {
       name: mockName,
       data: mockData
-    }
+    };
 
     mockQueue.expects('post').withArgs(expectedMsg, mockCallback).once();
 

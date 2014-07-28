@@ -4,6 +4,7 @@
  */
 
 var extend = require('extend');
+var debug = require('debug')('opnotiq:index');
 
 
 /**
@@ -36,25 +37,43 @@ function opnotiq(provider, options) {
 
   // for lazy queues
 
-  function create(type) {
+  function create(type, callback) {
     if (/^operation/i.test(type)) {
-      opQueue = opQueue || provider.get(opQueueName);
+      if (!opQueue) {
+        opQueue = provider.get(opQueueName);
+        opQueue.on('connected', callback);
+
+        opQueue.connect();
+      } else {
+        callback();
+      }
     } else if (/^notification/i.test(type)) {
-      notifQueue = notifQueue || provider.get(notifQueueName);
+      if (!notifQueue) {
+        notifQueue = provider.get(notifQueueName);
+        notifQueue.on('connected', callback);
+
+        notifQueue.connect();
+      } else {
+        callback();
+      }
     }
   }
 
   // to extract data from msg and enabling easy removal
 
   function receive(queue, callback) {
+
     return function(msg) {
+      debug('received msg..');
+
       function done() {
+        debug('done, removing msg');
         queue.remove(msg);
-      };
+      }
 
       var body = JSON.parse(msg.body || '{}');
       callback(body, done);
-    }
+    };
   }
 
   return {
@@ -68,17 +87,14 @@ function opnotiq(provider, options) {
      */
 
     on: function(type, callback) {
-      create(type);
-
-      if (/^operation/i.test(type)) {
-        opQueue.on('message', receive(opQueue, callback));
-        opQueue.connect();
-      } else if (/^notification/i.test(type)) {
-        notifQueue.on('message', receive(notifQueue, callback));
-        notifQueue.connect();
-      }
+      create(type, function() {
+        if (/^operation/i.test(type)) {
+          opQueue.on('message', receive(opQueue, callback));
+        } else if (/^notification/i.test(type)) {
+          notifQueue.on('message', receive(notifQueue, callback));
+        }
+      });
     },
-
 
     /**
      * Post a message in notification queue
@@ -91,15 +107,16 @@ function opnotiq(provider, options) {
      */
 
     postNotification: function(name, recipients, data, callback) {
-      create('notifications');
+      create('notifications', function() {
+        var msg = {
+          name: name,
+          recipients: recipients,
+          data: data
+        };
 
-      var msg = {
-        name: name,
-        recipients: recipients,
-        data: data
-      };
+        notifQueue.post(msg, callback);
+      });
 
-      notifQueue.post(msg, callback);
     },
 
 
@@ -112,14 +129,14 @@ function opnotiq(provider, options) {
      */
 
     postOperation: function(name, data, callback) {
-      create('operations');
+      create('operations', function() {
+        var msg = {
+          name: name,
+          data: data
+        };
 
-      var msg = {
-        name: name,
-        data: data
-      };
-
-      opQueue.post(msg, callback);
+        opQueue.post(msg, callback);
+      });
     }
   };
 }
