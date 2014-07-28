@@ -38,6 +38,7 @@ function opnotiq(provider, options) {
   // for lazy queues
 
   function create(type, callback) {
+    debug('create()');
     if (/^operation/i.test(type)) {
       if (!opQueue) {
         opQueue = provider.get(opQueueName);
@@ -49,11 +50,14 @@ function opnotiq(provider, options) {
       }
     } else if (/^notification/i.test(type)) {
       if (!notifQueue) {
+        debug('get notif queue()');
         notifQueue = provider.get(notifQueueName);
         notifQueue.on('connected', callback);
 
+        debug('connecting');
         notifQueue.connect();
       } else {
+        debug('notif already exists');
         callback();
       }
     }
