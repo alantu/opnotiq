@@ -72,7 +72,7 @@ function opnotiq(provider, options) {
       }
 
       var body = JSON.parse(msg.Body || '{}');
-      callback(msg, done);
+      callback(body, done);
     };
   }
 
