@@ -17,6 +17,10 @@ describe('opnotiq', function() {
         },
         remove: function(msgId, callback){
           callback();
+        },
+        start: function() { },
+        isStarted: function() {
+          return true;
         }
       };
 
