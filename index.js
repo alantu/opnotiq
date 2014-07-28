@@ -11,7 +11,7 @@ var debug = require('debug')('opnotiq:index');
  * Expose `opnotiq()` as the module.
  */
 
-module.exports = opnotiq
+module.exports = opnotiq;
 
 
 /**
@@ -71,8 +71,8 @@ function opnotiq(provider, options) {
         queue.remove(msg);
       }
 
-      var body = JSON.parse(msg.body || '{}');
-      callback(body, done);
+      //var body = JSON.parse(msg.body || '{}');
+      callback(msg, done);
     };
   }
 
