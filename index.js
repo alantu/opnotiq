@@ -114,7 +114,9 @@ function opnotiq(provider, options) {
      */
 
     postNotification: function(name, recipients, data, callback) {
+      debug('postNotification');
       create('notifications', function() {
+        debug('postNotification-->created');
         var msg = {
           name: name,
           recipients: recipients,
@@ -122,6 +124,7 @@ function opnotiq(provider, options) {
         };
 
         notifQueue.post(msg, callback);
+        debug('afterpost');
       });
 
     },
