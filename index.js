@@ -44,6 +44,9 @@ function opnotiq(provider, options) {
         opQueue = provider.get(opQueueName);
         opQueue.on('connected', callback);
 
+        // set idle backoff strategy
+        opQueue.idleBackoff('linear', 5);
+
         opQueue.connect();
       } else {
         callback();
@@ -53,6 +56,9 @@ function opnotiq(provider, options) {
         debug('get notif queue()');
         notifQueue = provider.get(notifQueueName);
         notifQueue.on('connected', callback);
+
+        // set idle backoff strategy
+        notifQueue.idleBackoff('linear', 5);
 
         debug('connecting');
         notifQueue.connect();
