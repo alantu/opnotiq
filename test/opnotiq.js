@@ -8,6 +8,7 @@ describe('opnotiq', function() {
 
   beforeEach(function () {
       sandbox = require('sinon').sandbox.create();
+
       fakeQueue = {
         connect: function(options) {
           this.emit('connected');
@@ -21,7 +22,8 @@ describe('opnotiq', function() {
         start: function() { },
         isStarted: function() {
           return true;
-        }
+        },
+        idleBackoff: function() { }
       };
 
       Emitter(fakeQueue);

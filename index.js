@@ -43,7 +43,7 @@ function opnotiq(provider, options) {
       if (!opQueue) {
         opQueue = provider.get(opQueueName);
         opQueue.on('connected', callback);
-
+        
         // set idle backoff strategy
         opQueue.idleBackoff('linear', 5);
 
